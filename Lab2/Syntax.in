@@ -26,4 +26,4 @@ whilestmt ::= "while" condition "::" stmt
 
 condition ::= expression RELATION expression
 
-RELATION ::= "<" | "<=" | "=" | "<>" | ">=" | ">"
+RELATION ::= "<" | "<=" | "=" | "!=" | ">=" | ">"
