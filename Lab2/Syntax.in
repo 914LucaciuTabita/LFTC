@@ -1,6 +1,6 @@
 Sintactical rules:
 
-cmpdstmt ::= "BEGIN" stmtlist "END"
+program ::= "BEGIN" stmtlist "END"
 
 stmtlist ::= stmt | stmt ";" stmtlist
 
@@ -20,7 +20,7 @@ iostmt ::= "READ" | "WRITE" "(" IDENTIFIER ")"
 
 structstmt ::= cmpdstmt | ifstmt | whilestmt
 
-ifstmt ::= "if_so" condition "::" stmt ["else::" stmt]
+ifstmt ::= "if_so" condition "::" stmt ["else" "::" stmt]
 
 whilestmt ::= "while" condition "::" stmt
 
