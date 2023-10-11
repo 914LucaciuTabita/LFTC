@@ -8,7 +8,7 @@ stmt ::= simplstmt | structstmt
 
 simplstmt ::= assignstmt | iostmt
 
-assignstmt ::= IDENTIFIER ":=" expression
+assignstmt ::= IDENTIFIER "=" expression
 
 expression ::= expression "+" term | term
 
