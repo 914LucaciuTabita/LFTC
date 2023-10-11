@@ -1,0 +1,29 @@
+Sintactical rules:
+
+cmpdstmt ::= "BEGIN" stmtlist "END"
+
+stmtlist ::= stmt | stmt ";" stmtlist
+
+stmt ::= simplstmt | structstmt
+
+simplstmt ::= assignstmt | iostmt
+
+assignstmt ::= IDENTIFIER ":=" expression
+
+expression ::= expression "+" term | term
+
+term ::= term "*" factor | factor
+
+factor ::= "(" expression ")" | IDENTIFIER
+
+iostmt ::= "READ" | "WRITE" "(" IDENTIFIER ")"
+
+structstmt ::= cmpdstmt | ifstmt | whilestmt
+
+ifstmt ::= "if_so" condition "::" stmt ["else::" stmt]
+
+whilestmt ::= "while" condition "::" stmt
+
+condition ::= expression RELATION expression
+
+RELATION ::= "<" | "<=" | "=" | "<>" | ">=" | ">"
