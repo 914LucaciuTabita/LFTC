@@ -1,6 +1,6 @@
 Sintactical rules:
 
-program ::= "BEGIN" stmtlist "END"
+program ::= "prog {" stmtlist "}"
 
 stmtlist ::= stmt | stmt ";" stmtlist
 
@@ -22,8 +22,8 @@ structstmt ::= cmpdstmt | ifstmt | whilestmt
 
 ifstmt ::= "if_so" condition "::" stmt ["else" "::" stmt]
 
-whilestmt ::= "while" condition "::" stmt
+whilestmt ::= "while" condition "::" "{" stmtlist "}"
 
 condition ::= expression RELATION expression
 
-RELATION ::= "<" | "<=" | "=" | "!=" | ">=" | ">"
+RELATION ::= "<" | "<=" | "==" | "!=" | ">=" | ">"

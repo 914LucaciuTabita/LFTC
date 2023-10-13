@@ -5,25 +5,19 @@ c. Decimal digits (0-9);
 
 Lexic:
 a. Special symbols, representing:
-- operators + - * / := < <= = >= #
-- separators [ ] { } : ; space
+- operators + - * / < <= = != >= > #
+- separators [ ] { } , ; : space newline " '
 - reserved words: tab do if_so else for_this of program read while print
 
 b. Identifiers:
 - A sequence of letters and digits, such that the first character is a letter; the rule is:
-  identifier ::= letter | letter { letter } { digit }
-  letter ::= "A" | "B" | ... | "Z"
-  digit ::= "0" | "1" | ... | "9"
+  identifier = letter { ( letter | digit ) }
+  letter = "A" | "B" | ... | "Z" | "a" | "b" | ... | "z"
+  digit = "0" | "1" | ... | "9"
 
 c. Constants:
-1. Integer - Rule:
-   noconst := "+" no | "-" no | no
-   no := digit { no }
-
-2. Character:
-   character := 'letter' | 'digit'
-
-3. String:
-   constchar := "string"
-   string := char { string }
-   char := letter | digit
+   intconst = "0" | ["+"|"-"]nz_digit{digit}
+   nz_digit = "1" | "2" | ... | "9"
+   strconst = """{letter|digit|"_"|" "}"""
+   charconst = "'"(letter|digit|special_char)"'"
+   special_char = "+" | "-" | "*" | "<" | ">" | ...
