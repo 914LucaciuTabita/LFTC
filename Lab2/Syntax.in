@@ -27,3 +27,5 @@ whilestmt ::= "while" condition "::" "{" stmtlist "}"
 condition ::= expression RELATION expression
 
 RELATION ::= "<" | "<=" | "==" | "!=" | ">=" | ">"
+
+// everything is good, following the code from lab 1
