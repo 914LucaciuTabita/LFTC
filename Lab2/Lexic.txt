@@ -6,8 +6,8 @@ c. Decimal digits (0-9);
 Lexic:
 a. Special symbols, representing:
 - operators + - * / < <= = != >= > #
-- separators [ ] { } , ; : space newline " '
-- reserved words: tab do if_so else for_this of program read while print
+- separators [ ] { } , ; : space newline " '  // you can also use the separators: ()
+- reserved words: tab do if_so else for_this of program read while print return
 
 b. Identifiers:
 - A sequence of letters and digits, such that the first character is a letter; the rule is:
@@ -21,3 +21,5 @@ c. Constants:
    strconst = """{letter|digit|"_"|" "}"""
    charconst = "'"(letter|digit|special_char)"'"
    special_char = "+" | "-" | "*" | "<" | ">" | ...
+
+   //everything else looks good
