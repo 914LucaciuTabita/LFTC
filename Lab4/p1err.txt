@@ -1,0 +1,20 @@
+## p1err.*
+## Find the minimum of three numbers
+
+tab minimum(a$, b$, c$)::
+{
+    m$ = a;
+
+    if_so b < m: ## Error: there must be 2 ::
+    {
+        m = b;
+        ~ ## illegal char
+    }
+
+    if_so c < m::
+    {
+        m = c;
+    }
+
+    return m;
+}
