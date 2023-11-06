@@ -1,149 +1,170 @@
-from symboltable import SymbolTable
 import re
+# ANSI escape codes for color formatting
+YELLOW = "\033[93m"
+RED = "\033[91m"
+RESET = "\033[0m"
 
 
-reserved_word_pattern = re.compile(r'tab|if_so|else|for_this|return|while|print|read')
-operator_pattern = re.compile(r'\+|-|\*|/|<|<=|>=|>|=|!=|==|:|;|%')
-separator_pattern = re.compile(r'\(|\)|<|>|{|}| | {4}|,')
-identifier_pattern = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
-digit_pattern = re.compile(r'[0-9]')
-char_literal_pattern = re.compile(r"'[A-Za-z0-9]'")
-string_literal_pattern = re.compile(r'"[^"]*"')
+class Scanner:
+    def __init__(self, symbol_table):
+        self.reserved_words = re.compile(r'tab|if_so|else|for_this|return|while|print|read|True|False')
+        self.operators = re.compile(r'\+|-|\*|/|<|<=|>=|>|==|=|!=|:|;|%|$')
+        self.separators = re.compile(r'\(|\)|<|>|{|}| | {4}|,')
+        self.identifiers = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
+        self.digits = re.compile(r'[0-9]')
+        self.chars = re.compile(r"'[A-Za-z0-9]'")
+        self.strings = re.compile(r'"[^"]*"')
+        self.pif_table = []
+        self.current_position = -1
+        self.symbol_table = symbol_table
 
-symbol_table = SymbolTable()
-fip_table = []
-current_position = -1
+    def add_element(self, token):
+        # If the token is an identifier, get its position from the Symbol Table
+        if self.symbol_table.has(token):
+            id = self.symbol_table.table.get_variable_count(token)
+        else:
+            id = -1  # Token is not an identifier
 
+        self.pif_table.append((token, id))
 
-def add_token_to_fip(token, symbol_table):
-    # If the token is an identifier, get its position from the Symbol Table
-    if symbol_table.has(token):
-        id = symbol_table.table.getVariableCount(token)
-    else:
-        id = -1  # Token is not an identifier
+    def buffering_from_file(self, input_file):
+        with open(input_file, 'r') as file:
+            source_code = file.read()
 
-    fip_table.append((token, id))
+        return self.buffering(source_code)
 
+    def buffering(self, source_code):
+        i = 0
+        line = 1
 
-def lexical_analysis(source_code, symbol_table):
-    i = 0
+        while i < len(source_code):
+            char = source_code[i]
 
-    while i < len(source_code):
-        char = source_code[i]
-
-        if char.isalpha() or char == '_':
-            match = identifier_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                if source_code[i + len(token)] == "$":
-                    # Handle variable declaration
-                    i += len(token)  # Move past the identifier
-                    i += 1  # Move past the colon
-                    symbol_table.add(token)
-                    add_token_to_fip(token, symbol_table)
+            if char == '$':
+                match = self.identifiers.match(source_code[i + 1:])
+                if match:
+                    token = match.group(0)
+                    self.symbol_table.add(token)
+                    self.add_element(token)
+                    i += len(token) + 1
                 else:
-                    add_token_to_fip(token, symbol_table)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid identifier")
-                i += 1
-
-        elif char in "0123456789":
-            match = digit_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                add_token_to_fip(token, symbol_table)
-                symbol_table.add(token)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid constant")
-                i += 1
-
-        elif char in "+-*/<=>!:;%":
-            match = operator_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                add_token_to_fip(token, symbol_table)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid operator")
-                i += 1
-
-        elif char in "()<{}>.,":
-            match = separator_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                add_token_to_fip(token, symbol_table)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid separator")
-                i += 1
-
-        elif char == "'":
-            match = char_literal_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                add_token_to_fip(token, symbol_table)
-                symbol_table.add(token)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid character")
-                i += 1
-
-        elif char == '"':
-            match = string_literal_pattern.match(source_code[i:])
-            if match:
-                token = match.group(0)
-                add_token_to_fip(token, symbol_table)
-                symbol_table.add(token)
-                i += len(token)
-            else:
-                print("Lexical error: Invalid string")
-                i += 1
-
-        elif char == " ":
-            # Handle the "tab" as an identifier (ID)
-            if source_code[i:i + 4] == "    ":
-                token = "    "
-                add_token_to_fip(token, symbol_table)
-                i += 4  # Skip the three spaces
-            else:
-                i += 1  # Skip a single space
-
-        elif char == "#":
-            if source_code[i+1] == "#":
-                while source_code[i] != "\n":
+                    print(f"{RED}Lexical error: Invalid identifier --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
                     i += 1
 
-        elif char == "\n":
-            i += 1  # Ignore newline
+            elif char.isalpha() or char == '_':
+                match = self.identifiers.match(source_code[i:])
+                if match:
+                    token = match.group(0)
+                    self.add_element(token)
+                    i += len(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid identifier --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}")
+                    i += 1
 
-        else:
-            print(f"Lexical error: Unknown character '{char}'")
-            i += 1
+            elif char in "0123456789":
+                match = self.digits.match(source_code[i:])
+                if match:
+                    token = char  # Initialize the token with the first digit
+                    i += 1
+                    while i < len(source_code) and source_code[i].isdigit():
+                        token += source_code[i]
+                        i += 1
+                    if len(token) > 1 and token[0] == '0':
+                        print(f"{RED}Lexical error: Invalid constant (starting with '0') --> {YELLOW}token: '{token}'{RED} at {YELLOW}line: {line}{RESET}")
+                    else:
+                        self.add_element(token)
+                        self.symbol_table.add(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid constant --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                    i += 1
 
-    return fip_table
+            elif char == ":":
+                if source_code[i + 1] == ":":
+                    token = "::"
+                    self.add_element(token)
+                    i += 2  # Skip the 2 spaces
+                else:
+                    i += 1  # Skip a single space
 
+            elif char in "+-*/<=>!:;%":
+                match = self.operators.match(source_code[i:])
+                if match:
+                    token = match.group(0)
+                    self.add_element(token)
+                    i += len(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid operator --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                    i += 1
 
-def write_to_output_files(fip_file, symbol_table_file, fip_table, symbol_table):
-    with open(fip_file, 'w') as fip_output, open(symbol_table_file, 'w') as symbol_table_output:
-        # Write FIP table to fip_file
-        fip_output.write("Position in ST |   Cod atom\n")
-        for code, position in fip_table:
-            fip_output.write(f"       {position}      |   {code}\n")
+            elif char in "()<{}>.,":
+                match = self.separators.match(source_code[i:])
+                if match:
+                    token = match.group(0)
+                    self.add_element(token)
+                    i += len(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid separator --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                    i += 1
 
-        # Write Symbol Table to symbol_table_file
-        symbol_table_output.write("Position | Atom lexical\n")
-        position = 1
-        for key in symbol_table.table.table:
-            if key is not None:
-                value = symbol_table.table.getVariableCount(key[0])
-                symbol_table_output.write(f"    {position}    |     {key[0]}\n")
-                position += 1
+            elif char == "'":
+                match = self.chars.match(source_code[i:])
+                if match:
+                    token = match.group(0)
+                    self.add_element(token)
+                    self.symbol_table.add(token)
+                    i += len(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid character --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                    i += 1
 
+            elif char == '"':
+                match = self.strings.match(source_code[i:])
+                if match:
+                    token = match.group(0)
+                    self.add_element(token)
+                    self.symbol_table.add(token)
+                    i += len(token)
+                else:
+                    print(f"{RED}Lexical error: Invalid string --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                    i += 1
 
-def read_source_code(input_file):
-    with open(input_file, 'r') as file:
-        source_code = file.read()
-    return source_code
+            elif char == " ":
+                # Handle the "tab" as an identifier (ID)
+                if source_code[i:i + 4] == "   ":
+                    token = "tab"
+                    self.add_element(token)
+                    i += 4  # Skip the four spaces
+                else:
+                    i += 1  # Skip a single space
 
+            elif char == "#":
+                if source_code[i + 1] == "#":
+                    while source_code[i] != "\n":
+                        i += 1
+
+            elif char == "\n":
+                line += 1
+                i += 1  # Ignore newline
+
+            else:
+                print(f"{RED}Lexical error: Unknown character --> {YELLOW}token: '{char}'{RED} at {YELLOW}line: {line}{RESET}")
+                i += 1
+
+        return self.pif_table
+
+    def get_pif_table(self):
+        return self.pif_table
+
+    def print_tables(self):
+        for code, position in self.pif_table:
+            print(f"{code} {position}")
+
+        print(self.symbol_table.__str__())
+
+    def write_tables_to_files(self, output_pif_file, output_symbol_table_file):
+        with open(output_pif_file, 'w') as pif_output, open(output_symbol_table_file, 'w') as symbol_table_output:
+            # Write PIF table to pif_output
+            for code, position in self.pif_table:
+                pif_output.write(f"{code}   | {position}\n")
+
+            symbol_table_output.write(self.symbol_table.print_sym_table())

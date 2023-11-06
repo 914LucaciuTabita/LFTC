@@ -23,10 +23,10 @@ class HashTable:
         else:
             raise ValueError("Unsupported key type")
 
-    def getSize(self):
+    def get_size(self):
         return self.size
 
-    def getHashValue(self, key):
+    def get_hash_value(self, key):
         return self.hash(key)
 
     def add(self, key, value=None):
@@ -56,12 +56,11 @@ class HashTable:
     def contains(self, key):
         index = self.hash(key)
         if self.table[index] is not None:
-            for entry in self.table[index]:
-                if entry[0] == key:
-                    return True
+            if self.table[index][0] == key:
+                return True
         return False
 
-    def getVariableCount(self, key):
+    def get_variable_count(self, key):
         index = self.hash(key)
         if self.table[index] is not None and self.table[index][0] == key:
             return self.table[index][1]
@@ -74,7 +73,7 @@ class HashTable:
                 next_index = (next_index + 1) % self.size
         return -1
 
-    def getPosition(self, key):
+    def get_position(self, key):
         index = self.hash(key)
         if self.table[index] is not None:
             for i, entry in enumerate(self.table[index]):

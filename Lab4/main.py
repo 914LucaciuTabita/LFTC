@@ -1,19 +1,23 @@
 from symboltable import SymbolTable
-from scanner import lexical_analysis, fip_table, read_source_code, write_to_output_files
-
+from scanner import Scanner
 
 if __name__ == "__main__":
-    symbol_table = SymbolTable(size=100)
+    symbol_table = SymbolTable(size=77)
 
-    output_fip_file = "output_fip.txt"
+    output_pif_file = "output_pif.txt"
     output_symbol_table_file = "output_symbol_table.txt"
 
-    source_code = read_source_code("p2.txt")
-    lexical_analysis(source_code, symbol_table)
-    write_to_output_files(output_fip_file, output_symbol_table_file, fip_table, symbol_table)
-    print("FIP Table:")
-    for code, position in fip_table:
-        print(f"{code} |  {position}")
+    scanner = Scanner(symbol_table)
+    scanner.buffering_from_file("p1err.txt")  # examples of files: p1.txt, p2.txt, p3.txt, p1err.txt, CodeBeingRead
+    print("\n")
+    print("PIF Table:")
+    for code, position in scanner.get_pif_table():
+        print(f"{code}   |  {position}")
 
-    print("\nSymbol Table:")
+    print("\n")
     print(symbol_table.__str__())
+
+    print("\n")
+    print(symbol_table.print_sym_table())
+
+    scanner.write_tables_to_files("output_pif.txt", "output_symbol_table.txt")

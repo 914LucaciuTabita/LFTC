@@ -1,0 +1,14 @@
+## p3.*
+## Compute the sum of n numbers
+
+tab compute_sum($numbers)::
+{
+    $total_sum = 0;
+
+    for_this $num in numbers::
+    {
+        total_sum += num;
+    }
+
+    return total_sum;
+}

@@ -1,14 +1,19 @@
 ## p1err.*
 ## Find the minimum of three numbers
 
-tab minimum(a$, b$, c$)::
-{
-    m$ = a;
+$min, $max;
+max = 023; ## invalid constant (starting with '0')
 
-    if_so b < m: ## Error: there must be 2 ::
+tab minimum($a, $b, $c)::
+{
+    $m = a;
+
+    if_so b < m::
     {
         m = b;
         ~ ## illegal char
+        @ ## illegal char
+        " ## invalid string
     }
 
     if_so c < m::

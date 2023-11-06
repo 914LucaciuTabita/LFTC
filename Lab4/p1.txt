@@ -1,9 +1,9 @@
 ## p1.*
 ## Find the minimum of three numbers
 
-tab minimum(a$, b$, c$)::
+tab minimum($a, $b, $c)::
 {
-    m$ = a;
+    $m = a;
 
     if_so b < m::
     {
