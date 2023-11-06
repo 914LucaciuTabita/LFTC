@@ -64,6 +64,8 @@ z
 !=
 [
 ]
+(
+)
 {
 }
 ,
@@ -91,5 +93,4 @@ for_this
 else 
 print 
 while 
-
-// may also add 'return' as reserved word
+return

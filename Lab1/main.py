@@ -1,21 +1,21 @@
 ## p1.*
 ## Find the minimum of three numbers
 
-tab minimum(a, b, c)::
+tab minimum($a, $b, $c)::
 {
-    min_num = a;
+    $m = a;
 
-    if_so b < min_num::
+    if_so b < m::
     {
-        min_num = b;
+        m = b;
     }
 
-    if_so c < min_num::
+    if_so c < m::
     {
-        min_num = c;
+        m = c;
     }
 
-    return min_num;
+    return m;
 }
 
 ## Example
@@ -29,21 +29,24 @@ print("The minimum of the three numbers is:", result);
 
 import math;
 
-tab is_prime(num)::
+
+tab is_prime($n)::
 {
-    if_so num < 2::
+    if_so n < 2::
     {
         return False;
     }
 
-    if_so num % 2 == 0::
+    if_so n % 2 == 0::
     {
         return False;
     }
 
-    for_this i in range(2, int(math.sqrt(num)) + 1, 2)::
+    $i;
+
+    for_this i in range(2, n/2, 2)::
     {
-        if num % i == 0::
+        if n % i == 0::
             return False;
     }
 
@@ -65,11 +68,11 @@ else::
 ## p3.*
 ## Compute the sum of n numbers
 
-tab compute_sum(numbers)::
+tab compute_sum($numbers)::
 {
-    total_sum = 0;
+    $total_sum = 0;
 
-    for_this num in numbers::
+    for_this $num in numbers::
     {
         total_sum += num;
     }
@@ -96,21 +99,27 @@ else::
 ## p1err.*
 ## Find the minimum of three numbers
 
-tab minimum(integer a, integer b, integer c)::
+$min, $max;
+max = 023; ## invalid constant (starting with '0')
+
+tab minimum($a, $b, $c)::
 {
-    min_num = a;
+    $m = a;
 
-    if_so b < min_num: ## Error: there must be 2 ::
+    if_so b < m::
     {
-        min_num = b;
+        m = b;
+        ~ ## illegal char
+        @ ## illegal char
+        " ## invalid string
     }
 
-    ifso c < min_num:: ## The reserved word is if_so not ifso
+    if_so c < m::
     {
-        min_num = c;
+        m = c;
     }
 
-    return min_num;
+    return m;
 }
 
 ## Example
