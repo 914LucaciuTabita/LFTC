@@ -26,7 +26,6 @@ class Grammar:
             self.N.append(Grammar.STARTING_SYMBOL)
             # add a new production S' -> S
             self.P[Grammar.STARTING_SYMBOL] = [[self.S]]
-            # change the starting symbol to Z
             self.S = Grammar.STARTING_SYMBOL
             self.is_enhanced = True
 

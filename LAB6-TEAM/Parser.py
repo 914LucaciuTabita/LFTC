@@ -15,7 +15,7 @@ class Parser:
     def generate_parsing_table(self):
         try:
             if not self.grammar.check_cfg():
-                raise ValueError("Grammar is not in Chomsky Normal Form.")
+                raise ValueError("Grammar is not Context-Free.")
         except ValueError as e:
             print(f"Error: {e}")
             return

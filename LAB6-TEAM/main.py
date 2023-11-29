@@ -5,7 +5,7 @@ from Parser import Parser
 if __name__ == '__main__':
     # Read the grammar from the file
     g = Grammar()
-    g.read_from_file("g4.in")
+    g.read_from_file("g5.in")
     print(g)
 
     # Make the grammar enhanced
