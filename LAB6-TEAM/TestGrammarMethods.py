@@ -11,17 +11,17 @@ class TestGrammarMethods(unittest.TestCase):
 
     def test_first_terminal(self):
         self.grammar.non_terminals = ['A']
-        self.grammar.terminals = ['a']
-        self.grammar.productions = {'A': [['a']]}
+        self.grammar.terminals = ['a', 'b']
+        self.grammar.productions = {'A': [['a'], ['b']]}
         result = self.grammar.FIRST('A')
-        self.assertEqual(result, {'a'})
+        self.assertEqual(result, {'a', 'b'})
 
     def test_first_non_terminal(self):
-        self.grammar.non_terminals = ['A', 'B']
-        self.grammar.terminals = ['a']
-        self.grammar.productions = {'A': [['B']], 'B': [['a']]}
+        self.grammar.non_terminals = ['A', 'B', 'C']
+        self.grammar.terminals = ['a', '+']
+        self.grammar.productions = {'A': [['B']], 'B': [['C', 'a']], 'C': [['a'], ['+']]}
         result = self.grammar.FIRST('A')
-        self.assertEqual(result, {'a'})
+        self.assertEqual(result, {'a', '+'})
 
     def test_first_epsilon(self):
         self.grammar.non_terminals = ['A', 'B']

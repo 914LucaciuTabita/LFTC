@@ -35,9 +35,14 @@ class Grammar:
         elif symbol in self.non_terminals:
             first_set = set()
             for production in self.productions[symbol]:
-                first_set |= (set(self.FIRST(production[0])) - {self.EPSILON})
-                if self.EPSILON not in self.FIRST(production[0]):
-                    break
+                for current_symbol in production:
+                    first_set |= (set(self.FIRST(current_symbol)) - {self.EPSILON})
+                    if self.EPSILON not in self.FIRST(current_symbol):
+                        break
+                else:
+                    # This else clause is executed if the inner loop completes without hitting a break
+                    if self.EPSILON in self.FIRST(current_symbol):
+                        first_set.add(self.EPSILON)
             return first_set
         else:
             return {symbol}  # For terminals
