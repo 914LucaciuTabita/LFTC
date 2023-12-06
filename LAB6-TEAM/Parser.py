@@ -22,8 +22,8 @@ class Parser:
 
         self.parsing_table = defaultdict(dict)
 
-        for nonterminal in self.grammar.N:
-            for terminal in self.grammar.E:
+        for nonterminal in self.grammar.non_terminals:
+            for terminal in self.grammar.terminals:
                 if terminal != Grammar.EPSILON:
                     self.parsing_table[nonterminal][terminal] = self.find_production(nonterminal, terminal)
 
@@ -35,7 +35,7 @@ class Parser:
                 self.parsing_table[nonterminal]['$'] = self.find_production(nonterminal, '$')
 
     def find_production(self, nonterminal: str, terminal: str) -> list:
-        productions = self.grammar.P[nonterminal]
+        productions = self.grammar.productions[nonterminal]
         for production in productions:
             first_set = self.grammar.FIRST(production[0])
             if terminal in first_set:
@@ -56,7 +56,7 @@ class Parser:
         self.current_parse_tree_node = stack_top
 
         while stack_top.value != '$':
-            if stack_top.value in self.grammar.N:
+            if stack_top.value in self.grammar.non_terminals:
                 if current_input in self.parsing_table[stack_top.value]:
                     production = self.parsing_table[stack_top.value][current_input]
                     stack.pop()
