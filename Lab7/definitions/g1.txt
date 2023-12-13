@@ -1,0 +1,7 @@
+nonterminals: A B C
+terminals: x y z ( )
+starting_symbol: A
+productions:
+A -> B C
+B -> x | ( A )
+C -> y C | z
